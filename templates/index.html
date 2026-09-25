@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automat Biletowy</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <div class="container py-5">
+        <!-- Nagłówek -->
+        <div class="row mb-4 align-items-center">
+            <div class="col">
+                <h1 class="fw-bold text-primary"><i class="bi bi-ticket-perforated"></i> Automat Biletowy</h1>
+                <p class="text-muted mb-0">Wybierz interesujące Cię bilety z menu poniżej.</p>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('koszyk') }}" class="btn btn-outline-primary position-relative btn-lg shadow-sm">
+                    <i class="bi bi-cart3"></i> Koszyk
+                    {% if liczba_elementow > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ liczba_elementow }}
+                        </span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+
+        <!-- Okruszki / Ścieżka nawigacji -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <span class="text-muted fw-semibold me-2">Ścieżka:</span>
+                    <span class="badge bg-secondary">Start</span>
+                    {% for k in sciezka %}
+                        <span class="text-muted">/</span> <span class="badge bg-info text-dark">{{ k }}</span>
+                    {% endfor %}
+                </div>
+                {% if sciezka %}
+                    <form method="POST" class="m-0">
+                        <input type="hidden" name="akcja" value="reset">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-counterclockwise"></i> Powrót do głównego menu
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Siatka opcji / przycisków -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+            {% for opcja in opcje %}
+                <div class="col">
+                    <form method="POST" class="h-100">
+                        <input type="hidden" name="akcja" value="wybierz">
+                        <input type="hidden" name="klucz" value="{{ opcja.nazwa }}">
+                        <button type="submit" class="card h-100 w-100 text-start shadow-sm p-4 border-0 bg-white text-dark text-decoration-none transition-hover" style="cursor: pointer; transition: transform 0.2s;">
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    {% if opcja.czy_kategoria %}
+                                        <i class="bi bi-folder2-open text-warning fs-3 mb-2 d-block"></i>
+                                    {% else %}
+                                        <i class="bi bi-ticket text-success fs-3 mb-2 d-block"></i>
+                                    {% endif %}
+                                    <h5 class="card-title fw-bold mb-1">{{ opcja.nazwa }}</h5>
+                                </div>
+                                <div class="mt-3">
+                                    {% if opcja.cena is not none %}
+                                        <span class="badge bg-success fs-6">{{ "%.2f"|format(opcja.cena) }} PLN</span>
+                                    {% else %}
+                                        <span class="text-primary small fw-semibold">Wybierz kategorię <i class="bi bi-chevron-right"></i></span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twój Koszyk - Automat Biletowy</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+    <div class="container py-5" style="max-width: 700px;">
+        <div class="card shadow border-0 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0 text-primary"><i class="bi bi-cart-check"></i> Twój Koszyk</h2>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Kontynuuj zakupy
+                </a>
+            </div>
+
+            {% if not koszyk %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-cart-x fs-1 d-block mb-3"></i>
+                    <h4>Koszyk jest pusty</h4>
+                    <p>Nie wybrano jeszcze żadnych biletów.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Wróć do wyboru biletów</a>
+                </div>
+            {% else %}
+                <ul class="list-group mb-4 shadow-sm">
+                    {% for b in koszyk %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <div>
+                                <span class="fw-semibold">{{ b.nazwa }}</span>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge bg-success fs-6">{{ "%.2f"|format(b.cena) }} PLN</span>
+                                <!-- Przycisk usuwania konkretnego biletowego missclicka -->
+                                <form method="POST" class="m-0">
+                                    <input type="hidden" name="akcja" value="usun">
+                                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Usuń ten bilet">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="card bg-white border mb-4 p-3 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fs-5 fw-bold text-secondary">Do zapłaty RAZEM:</span>
+                        <span class="fs-4 fw-bold text-success">{{ "%.2f"|format(suma) }} PLN</span>
+                    </div>
+                </div>
+
+                {% if blad %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> {{ blad }}
+                    </div>
+                {% endif %}
+
+                <!-- Formularz płatności -->
+                <form method="POST" class="mb-3">
+                    <input type="hidden" name="akcja" value="zaplac">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Wrzuć pieniądze (Podaj kwotę w PLN):</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-cash"></i></span>
+                            <input type="number" step="0.01" name="wplata" class="form-control" placeholder="np. 50.00" required>
+                            <button type="submit" class="btn btn-success px-4 fw-bold">Zapłać i drukuj</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-end">
+                    <form method="POST">
+                        <input type="hidden" name="akcja" value="wyczysc">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash3"></i> Wyczyść cały koszyk
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
