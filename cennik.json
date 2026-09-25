@@ -1,0 +1,44 @@
+{
+    "normalny":
+    {
+        "okresowy":
+        {
+            "półroczny": 1000,
+            "miesięczny": 200,
+            "tygodniowy": 50,
+            "jednodniowy": 15
+        },
+        "czasowy":
+        {
+            "60 - minutowy": 6,
+            "30 - minutowy": 4,
+            "10 - minutowy": 2
+        },
+        "jednorazowy":
+        {
+            "miejski": 5,
+            "aglomeracyjny": 7
+        }
+    },
+    "ulgowy":
+    {
+        "okresowy":
+        {
+            "półroczny": 500,
+            "miesięczny": 100,
+            "tygodniowy": 25,
+            "jednodniowy": 12.5
+        },
+        "czasowy":
+        {
+            "60 - minutowy": 3,
+            "30 - minutowy": 2,
+            "10 - minutowy": 1
+        },
+        "jednorazowy":
+        {
+            "miejski": 2.5,
+            "aglomeracyjny": 3.5
+        }
+    }
+}
